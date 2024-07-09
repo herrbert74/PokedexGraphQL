@@ -7,6 +7,7 @@ plugins {
 	alias(libs.plugins.ksp)
 	alias(libs.plugins.google.dagger.hilt.android)
 	alias(libs.plugins.realm)
+	alias(libs.plugins.graphql)
 }
 
 android {
@@ -61,6 +62,12 @@ android {
 	}
 }
 
+apollo {
+	service("service") {
+		packageName.set("com.zsoltbertalan.pokedexgraphql")
+	}
+}
+
 dependencies {
 
 	implementation(libs.androidx.activity.compose)
@@ -109,6 +116,8 @@ dependencies {
 	implementation(libs.coil)
 
 	implementation(libs.inject)
+
+	implementation(libs.graphql.runtime)
 
 	testImplementation(libs.androidx.test.coreKtx)
 	testImplementation(libs.androidx.test.ext.jUnit)

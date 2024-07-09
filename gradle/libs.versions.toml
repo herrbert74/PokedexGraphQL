@@ -56,6 +56,7 @@ multiplatform-settings = "1.1.1"
 realm = "2.0.0"
 skie = "0.8.2"
 babestudios-base = "3.0.0"
+graphql = "4.0.0-rc.1"
 
 [libraries]
 
@@ -245,6 +246,8 @@ squareUp-retrofit2-converterGson = { module = "com.squareup.retrofit2:converter-
 squareUp-retrofit2-converterSimpleXml = { module = "com.squareup.retrofit2:converter-simplexml", version.ref = "retrofit" }
 squareUp-retrofit2-converterMoshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 
+graphql-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "graphql" }
+
 #facebook-core = { module = "com.facebook.android:facebook-core", version.ref = "facebook" }
 #facebook-login = { module = "com.facebook.android:facebook-login", version.ref = "facebook" }
 
@@ -344,6 +347,7 @@ parcelize-darwin = { id = "com.arkivanov.parcelize.darwin", version.ref = "parce
 mockmp-core = { id = "org.kodein.mock.mockmp", version.ref = "mockmp" }
 touchlab-skie = { id = "co.touchlab.skie", version.ref = "skie" }
 realm = { id = "io.realm.kotlin", version.ref = "realm" }
+graphql = { id = "com.apollographql.apollo", version.ref = "graphql" }
 
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "1.30.0" }
