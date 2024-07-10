@@ -1,13 +1,16 @@
 package com.zsoltbertalan.pokedexgraphql.data.repository
 
+import androidx.paging.PagingData
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.map
 import com.zsoltbertalan.pokedexgraphql.PokemonsQuery
 import com.zsoltbertalan.pokedexgraphql.data.db.PokemonDataSource
 import com.zsoltbertalan.pokedexgraphql.common.async.IoDispatcher
 import com.zsoltbertalan.pokedexgraphql.common.util.Outcome
 import com.zsoltbertalan.pokedexgraphql.common.util.getresult.fetchCacheThenNetwork
+import com.zsoltbertalan.pokedexgraphql.common.util.runCatchingApi
 import com.zsoltbertalan.pokedexgraphql.domain.api.PokemonRepository
 import com.zsoltbertalan.pokedexgraphql.data.network.PokemonService
 import com.zsoltbertalan.pokedexgraphql.data.network.dto.PokemonDto
@@ -28,9 +31,7 @@ class PokemonAccessor(
 	@IoDispatcher private val ioContext: CoroutineDispatcher,
 ) : PokemonRepository {
 
-	override suspend fun getAllPokemon(): Flow<Outcome<List<Pokemon>>> {
-		val d = apolloClient.query(PokemonsQuery(limit = Optional.present(20), Optional.present(1))).execute().data
-		Timber.d("zsoltbertalan* getAllPokemon: $d")
+	override fun getAllPokemon(): Flow<Outcome<List<Pokemon>>> {
 		return fetchCacheThenNetwork(
 			fetchFromLocal = { pokemonDataSource.getPokemons() },
 			makeNetworkRequest = { pokemonService.getPokemons() },
@@ -39,7 +40,7 @@ class PokemonAccessor(
 		).flowOn(ioContext)
 	}
 
-	override suspend fun getPokemon(pokemonId: Int): Flow<Outcome<Pokemon>> {
+	override fun getPokemon(pokemonId: Int): Flow<Outcome<Pokemon>> {
 
 		return flow<Outcome<Pokemon>> {
 			val pokemon = pokemonDataSource.getPokemon(pokemonId)
@@ -47,5 +48,20 @@ class PokemonAccessor(
 		}.flowOn(ioContext)
 
 	}
+
+	override fun getPokemonPageFlow(): Flow<PagingData<Pokemon>> = createPager { pageOffset ->
+		runCatchingApi {
+			apolloClient.query(
+				PokemonsQuery(
+					limit = Optional.present(PAGING_PAGE_SIZE), offset = Optional.present(pageOffset)
+				)
+			)
+				.execute()
+				.data
+		}.map {
+			Timber.d("zsoltbertalan* getAllPokemon: $it")
+			Pair(it?.toPokemonList().orEmpty(), it?.pokemons?.count ?: 0)
+		}
+	}.flow
 
 }

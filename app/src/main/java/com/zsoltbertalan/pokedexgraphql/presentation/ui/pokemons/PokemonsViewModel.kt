@@ -2,10 +2,13 @@ package com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemons
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.zsoltbertalan.pokedexgraphql.domain.api.PokemonRepository
 import com.zsoltbertalan.pokedexgraphql.domain.model.Pokemon
 import com.zsoltbertalan.pokedexgraphql.domain.model.Failure
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,29 +22,18 @@ class PokemonsViewModel @Inject constructor(private val pokemonRepository: Pokem
 	private val _state = MutableStateFlow(UiState())
 	val state: StateFlow<UiState> = _state.asStateFlow()
 
-	init {
-		requestPokemons()
-	}
+	val pokemons : Flow<PagingData<Pokemon>> = pokemonRepository.getPokemonPageFlow().cachedIn(viewModelScope)
 
-	fun requestPokemons() {
-		viewModelScope.launch {
-			_state.update { it.copy(loading = true) }
-			pokemonRepository.getAllPokemon().collect { result ->
-				_state.update { uiState ->
-					when {
-						result.isOk -> {
-							uiState.copy(
-								pokemons = result.value,
-								loading = false,
-								error = null,
-							)
-						}
-						else -> uiState.copy(loading = false, error = result.error)
-					}
-				}
-			}
-		}
-	}
+//	init {
+//		requestPokemons()
+//	}
+
+//	fun requestPokemons() {
+//		viewModelScope.launch {
+//			_state.update { it.copy(loading = true) }
+//			pokemons =
+//		}
+//	}
 
 	data class UiState(
 		val loading: Boolean = false,

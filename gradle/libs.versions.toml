@@ -15,6 +15,8 @@ androidx-activity = "1.9.0"
 androidx-lifecycle = "2.8.2"
 androidx-navigation = "2.7.7"
 androidx-hilt = "1.2.0"
+androidx-paging = "3.3.0"
+androidx-palette-ktx = "1.0.0"
 androidx-work = "2.9.0"
 androidx-test-core = "1.6.1"
 androidx-test-rules = "1.6.1"
@@ -138,6 +140,10 @@ androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "androi
 androidx-hilt-navigation = { module = "androidx.hilt:hilt-navigation", version.ref = "androidx-hilt" }
 androidx-hilt-navigationFragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "androidx-hilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
+androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "androidx-paging" }
+androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "androidx-palette-ktx" }
 androidx-savedState  = "androidx.savedstate:savedstate:1.2.1"
 androidx-workmanager-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-workmanager-testing = { module = "androidx.work:work-testing", version.ref = "androidx-work" }

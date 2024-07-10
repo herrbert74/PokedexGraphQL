@@ -118,6 +118,8 @@ dependencies {
 	implementation(libs.inject)
 
 	implementation(libs.graphql.runtime)
+	implementation(libs.androidx.paging.compose)
+	implementation(libs.androidx.paging.runtime)
 
 	testImplementation(libs.androidx.test.coreKtx)
 	testImplementation(libs.androidx.test.ext.jUnit)
