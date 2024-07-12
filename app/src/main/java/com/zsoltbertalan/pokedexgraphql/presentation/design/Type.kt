@@ -48,7 +48,7 @@ val PokedexGraphQLTypography = Typography(
 	),
 	headlineSmall = TextStyle(
 		fontFamily = Roboto,
-		fontWeight = FontWeight.W400,
+		fontWeight = FontWeight.W700,
 		fontSize = 24.sp,
 		lineHeight = 32.sp,
 		letterSpacing = 0.sp

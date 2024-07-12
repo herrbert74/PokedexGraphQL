@@ -94,16 +94,15 @@ private fun ErrorView(innerPadding: PaddingValues) {
 }
 
 private fun LazyListScope.showMovies(
-	genreMovies: LazyPagingItems<Pokemon>,
+	pokemonLazyPagingItems: LazyPagingItems<Pokemon>,
 ) {
 
-	items(genreMovies.itemCount) { index ->
-		genreMovies[index].let {
+	items(pokemonLazyPagingItems.itemCount) { index ->
+		pokemonLazyPagingItems[index].let {
 			it?.let {
 				PokemonCard(
+					id = it.id.toString(),
 					name = it.name,
-					type = it.type,
-					region = it.region,
 					imageUrl = it.imageUrl,
 				)
 			}
@@ -116,26 +115,16 @@ private fun LazyListScope.showMovies(
 	}
 
 	when {
-		genreMovies.loadState.refresh is LoadState.Loading -> {
-			item {
-				ShowLoading(
-					text = stringResource(id = R.string.loading)
-				)
-			}
+		pokemonLazyPagingItems.loadState.refresh is LoadState.Loading -> {
+			item { ShowLoading(text = stringResource(id = R.string.loading)) }
 		}
 
-		genreMovies.loadState.append is LoadState.Loading -> {
-			item {
-				ShowLoading(
-					text = stringResource(id = R.string.loading)
-				)
-			}
+		pokemonLazyPagingItems.loadState.append is LoadState.Loading -> {
+			item { ShowLoading(text = stringResource(id = R.string.loading)) }
 		}
 
-		genreMovies.loadState.refresh is LoadState.Error -> {
-			item {
-				Text(text = "Not Loading")
-			}
+		pokemonLazyPagingItems.loadState.refresh is LoadState.Error -> {
+			item { Text(text = "Not Loading") }
 		}
 	}
 }

@@ -9,6 +9,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
 import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTypography
+import com.zsoltbertalan.pokedexgraphql.presentation.design.smallDimensions
+import com.zsoltbertalan.pokedexgraphql.presentation.design.titleLargeBold
 import com.zsoltbertalan.pokedexgraphql.presentation.design.titleMediumBold
 
 @Composable
@@ -16,11 +18,11 @@ fun TitleText(modifier: Modifier = Modifier, name: String) {
 	Text(
 		modifier = modifier
 			.fillMaxWidth()
-			.padding(horizontal = 8.dp),
+			.padding(vertical = smallDimensions.marginLarge),
 		text = name,
 		maxLines = 2,
 		overflow = TextOverflow.Ellipsis,
 		color = Colors.onSurface,
-		style = PokedexGraphQLTypography.titleMediumBold
+		style = PokedexGraphQLTypography.displaySmall
 	)
 }

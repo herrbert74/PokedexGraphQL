@@ -15,7 +15,7 @@ fun PokemonsQuery.Result.toPokemon() = Pokemon(
 	 emptyList(),
 	 emptyList(),
 	 0,
-	this.image ?: "",
+	this.artwork ?: "",
 	 "",
 	 "",
 	this.name ?: "",

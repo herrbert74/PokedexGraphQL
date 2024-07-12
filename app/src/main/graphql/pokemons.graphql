@@ -8,8 +8,7 @@ query pokemons($limit: Int, $offset: Int) {
         results {
             id
             name
-            url
-            image
+            artwork
         }
     }
 }

@@ -1,0 +1,37 @@
+query pokemon($name: String!) {
+    pokemon(name: $name) {
+        id
+        name
+        abilities{
+            ability{
+                name
+            }
+            is_hidden
+            slot
+        }
+        moves {
+            move {
+                name
+            }
+        }
+        types {
+            type {
+                name
+            }
+        }
+        stats {
+            base_stat
+            effort
+            stat{
+                name
+            }
+        }
+        order
+    }
+}
+
+fragment baseName on BaseName{
+    id
+    url
+    name
+}
