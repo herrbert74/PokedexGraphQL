@@ -15,6 +15,7 @@ import com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemondetails.PokemonDe
 import com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemondetails.PokemonDetailsViewModel
 import com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemons.PokemonsScreen
 import com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemons.PokemonsViewModel
+import timber.log.Timber
 
 @SuppressLint("RestrictedApi")
 @Composable
@@ -32,22 +33,19 @@ fun NavHostContainer(
 				val list = pokemonsViewModel.pokemons.collectAsLazyPagingItems()
 				PokemonsScreen(
 					pokemonList = list,
-					onItemClick = {
+					onItemClick = {name->
+						Timber.d("zsoltbertalan* NavHostContainer, name: $name")
 						if (navController.currentDestination ==
 							navController.findDestination(Destination.POKEMONS.route)
 						) {
-							val pokemonId = pokemonsViewModel.state.value.pokemonId
-							navController.navigate("details/{pokemonId}")
+							navController.navigate("details/$name")
 						}
-					},
-					onSortPokemonsClick = {
-						//pokemonsViewModel.requestPokemons()
 					}
 				)
 			}
 			composable(
 				Destination.DETAILS.route,
-				arguments = listOf(navArgument("pokemonId") { type = NavType.StringType }),
+				arguments = listOf(navArgument("name") { type = NavType.StringType }),
 				enterTransition = {
 					slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start)
 				},

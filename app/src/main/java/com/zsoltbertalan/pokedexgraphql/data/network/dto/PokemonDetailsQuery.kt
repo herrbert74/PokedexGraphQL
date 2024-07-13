@@ -3,8 +3,12 @@ package com.zsoltbertalan.pokedexgraphql.data.network.dto
 import com.zsoltbertalan.pokedexgraphql.PokemonQuery
 import com.zsoltbertalan.pokedexgraphql.domain.model.PokemonDetails
 import com.zsoltbertalan.pokedexgraphql.domain.model.Stat
+import timber.log.Timber
 
-fun PokemonQuery.Data.toPokemon(): PokemonDetails? = this.pokemon?.toPokemon()
+fun PokemonQuery.Data.toPokemon(): PokemonDetails? {
+	Timber.d("zsoltbertalan* toPokemon: ${this.pokemon}")
+	return this.pokemon?.toPokemon()
+}
 
 private fun PokemonQuery.Pokemon.toPokemon(): PokemonDetails = PokemonDetails(
 	this.id ?: 0,

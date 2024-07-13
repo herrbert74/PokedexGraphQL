@@ -68,6 +68,7 @@ class PokemonAccessor(
 	}.flow
 
 	override suspend fun getPokemon(name: String): Outcome<PokemonDetails> {
+		Timber.d("zsoltbertalan* getPokemon: $name")
 		return runCatchingApi {
 			apolloClient.query(
 				PokemonQuery(

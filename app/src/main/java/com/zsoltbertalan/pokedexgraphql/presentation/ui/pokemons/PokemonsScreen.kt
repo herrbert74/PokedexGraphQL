@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -36,8 +34,7 @@ import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
 @Composable
 fun PokemonsScreen(
 	pokemonList: LazyPagingItems<Pokemon>,
-	onItemClick: (Pokemon) -> Unit,
-	onSortPokemonsClick: () -> Unit,
+	onItemClick: (String) -> Unit,
 ) {
 
 	Scaffold(
@@ -51,12 +48,7 @@ fun PokemonsScreen(
 					Text("PokedexGraphQl")
 				},
 				actions = {
-					IconButton(onClick = { onSortPokemonsClick() }) {
-						Icon(
-							painter = painterResource(R.drawable.ic_sort_by_alpha),
-							contentDescription = "Sort icon",
-						)
-					}
+
 				}
 			)
 		}
@@ -66,7 +58,7 @@ fun PokemonsScreen(
 				.background(Colors.surface)
 				.padding(paddingValues)
 		) {
-			showMovies(pokemonList)
+			showPokemons(pokemonList, onItemClick)
 		}
 	}
 }
@@ -93,8 +85,9 @@ private fun ErrorView(innerPadding: PaddingValues) {
 	}
 }
 
-private fun LazyListScope.showMovies(
+private fun LazyListScope.showPokemons(
 	pokemonLazyPagingItems: LazyPagingItems<Pokemon>,
+	onItemClick: (String) -> Unit,
 ) {
 
 	items(pokemonLazyPagingItems.itemCount) { index ->
@@ -104,6 +97,7 @@ private fun LazyListScope.showMovies(
 					id = it.id.toString(),
 					name = it.name,
 					imageUrl = it.imageUrl,
+					onItemClick = onItemClick
 				)
 			}
 

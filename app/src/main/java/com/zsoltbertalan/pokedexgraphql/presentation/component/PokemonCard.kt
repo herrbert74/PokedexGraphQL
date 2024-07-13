@@ -1,5 +1,6 @@
 package com.zsoltbertalan.pokedexgraphql.presentation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,12 +24,15 @@ import com.zsoltbertalan.pokedexgraphql.presentation.design.smallDimensions
 fun PokemonCard(
 	modifier: Modifier = Modifier,
 	id: String,
-	name: String?,
+	name: String,
 	imageUrl: String?,
+	onItemClick: (String) -> Unit,
 ) {
 
 	Box(
-		modifier = modifier.padding(horizontal = smallDimensions.marginLarge)
+		modifier = modifier
+			.padding(horizontal = smallDimensions.marginLarge)
+			.clickable { onItemClick(name) }
 	) {
 		Card(
 			modifier = modifier
@@ -47,7 +51,7 @@ fun PokemonCard(
 				horizontalAlignment = Alignment.Start,
 			) {
 				RatingText(rating = id)
-				name?.let { TitleText(name = it) }
+				TitleText(name = name)
 			}
 		}
 		imageUrl?.let {
@@ -70,7 +74,9 @@ fun ShowDetailCardPreview() {
 		PokemonCard(
 			id = "0001",
 			name = "ivysaur",
-			imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png"
+			imageUrl = "https://raw.githubusercontent" +
+				".com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
+			onItemClick = {}
 		)
 	}
 }
