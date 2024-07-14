@@ -6,20 +6,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
 import com.zsoltbertalan.pokedexgraphql.presentation.design.smallDimensions
+import com.zsoltbertalan.pokedexgraphql.presentation.design.titleLargeBold
 
 @Composable
-fun RatingText(modifier: Modifier = Modifier, rating: String) {
+fun DetailText(text: String, modifier: Modifier = Modifier) {
 	Text(
 		modifier = modifier
-			.fillMaxWidth()
-			.padding(horizontal =  smallDimensions.marginNormal, vertical = smallDimensions.marginLarge),
-		text = rating,
+			.padding(vertical = smallDimensions.marginNormal, horizontal = smallDimensions.marginNormal),
+		text = text,
 		maxLines = 1,
-		style = MaterialTheme.typography.headlineMedium,
+		style = MaterialTheme.typography.titleLargeBold,
+		color = Colors.onSurface,
+		overflow = TextOverflow.Ellipsis,
 	)
 }

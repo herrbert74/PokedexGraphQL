@@ -50,7 +50,7 @@ fun PokemonCard(
 				verticalArrangement = Arrangement.Center,
 				horizontalAlignment = Alignment.Start,
 			) {
-				RatingText(rating = id)
+				LargeText(rating = id)
 				TitleText(name = name)
 			}
 		}

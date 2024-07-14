@@ -40,7 +40,7 @@ val PokedexGraphQLTypography = Typography(
 		letterSpacing = 0.sp
 	),
 	headlineMedium = TextStyle(
-		fontFamily = Roboto,
+		fontFamily = FontFamily.SansSerif,
 		fontWeight = FontWeight.W400,
 		fontSize = 28.sp,
 		lineHeight = 36.sp,
@@ -121,5 +121,5 @@ val PokedexGraphQLTypography = Typography(
 val Typography.titleLargeBold: TextStyle
 	get() = titleLarge.merge(TextStyle(fontWeight = FontWeight.Bold))
 
-val Typography.titleMediumBold: TextStyle
-	get() = titleMedium.merge(TextStyle(fontWeight = FontWeight.Bold))
+val Typography.headlineMediumBold: TextStyle
+	get() = headlineMedium.merge(TextStyle(fontWeight = FontWeight.Bold))
