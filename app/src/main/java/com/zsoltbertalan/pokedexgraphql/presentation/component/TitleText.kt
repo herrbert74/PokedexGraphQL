@@ -20,6 +20,6 @@ fun TitleText(name: String, modifier: Modifier = Modifier) {
 		maxLines = 2,
 		overflow = TextOverflow.Ellipsis,
 		color = Colors.onSurface,
-		style = PokedexGraphQLTypography.displaySmall
+		style = PokedexGraphQLTypography.headlineLarge
 	)
 }

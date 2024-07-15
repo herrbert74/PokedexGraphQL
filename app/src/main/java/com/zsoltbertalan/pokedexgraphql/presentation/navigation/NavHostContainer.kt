@@ -2,7 +2,11 @@ package com.zsoltbertalan.pokedexgraphql.presentation.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -24,42 +28,56 @@ fun NavHostContainer(
 ) {
 	val pokemonsViewModel = hiltViewModel<PokemonsViewModel>()
 
-	NavHost(
-		navController = navController,
-		startDestination = Destination.POKEMONS.route,
-		modifier = Modifier,
-		builder = {
-			composable(Destination.POKEMONS.route) {
-				val list = pokemonsViewModel.pokemons.collectAsLazyPagingItems()
-				PokemonsScreen(
-					pokemonList = list,
-					onItemClick = {name->
-						Timber.d("zsoltbertalan* NavHostContainer, name: $name")
-						if (navController.currentDestination ==
-							navController.findDestination(Destination.POKEMONS.route)
+	SharedTransitionLayout {
+		CompositionLocalProvider(
+			LocalSharedTransitionScope provides this
+		) {
+			NavHost(
+				navController = navController,
+				startDestination = Destination.POKEMONS.route,
+				modifier = Modifier,
+				builder = {
+					composable(Destination.POKEMONS.route) {
+						val list = pokemonsViewModel.pokemons.collectAsLazyPagingItems()
+						PokemonsScreen(
+							pokemonList = list,
+							this@composable,
+							onItemClick = { name, imageUrl ->
+								val i = imageUrl.replace("/", "dash")
+								Timber.d("zsoltbertalan* NavHostContainer, image: $i")
+								if (navController.currentDestination ==
+									navController.findDestination(Destination.POKEMONS.route)
+								) {
+									navController.navigate("details/$name/$i")
+								}
+							}
+						)
+					}
+					composable(
+						Destination.DETAILS.route,
+						arguments = listOf(
+							navArgument("name") { type = NavType.StringType },
+							navArgument("imageUrl") { type = NavType.StringType }
+						),
+						enterTransition = {
+							slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start)
+						},
+						popExitTransition = {
+							slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End)
+						}
+					) {
+						val detailsViewModel = hiltViewModel<PokemonDetailsViewModel>()
+						PokemonDetailsScreen(
+							stateFlow = detailsViewModel.state,
+							this@composable
 						) {
-							navController.navigate("details/$name")
+							navController.popBackStack()
 						}
 					}
-				)
-			}
-			composable(
-				Destination.DETAILS.route,
-				arguments = listOf(navArgument("name") { type = NavType.StringType }),
-				enterTransition = {
-					slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start)
-				},
-				popExitTransition = {
-					slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End)
 				}
-			) {
-				val detailsViewModel = hiltViewModel<PokemonDetailsViewModel>()
-				PokemonDetailsScreen(
-					stateFlow = detailsViewModel.state,
-				) {
-					navController.popBackStack()
-				}
-			}
+			)
 		}
-	)
+	}
 }
+
+val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }

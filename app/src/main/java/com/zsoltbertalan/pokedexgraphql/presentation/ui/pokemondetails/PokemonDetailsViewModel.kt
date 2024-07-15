@@ -21,21 +21,21 @@ class PokemonDetailsViewModel @Inject constructor(
 	private val pokedexGraphQLRepository: PokemonRepository
 ) : ViewModel() {
 
+	private val name: String = checkNotNull(savedStateHandle["name"])
+	private val imageUrl: String = checkNotNull(savedStateHandle["imageUrl"])
+
 	private val _state = MutableStateFlow(UiState())
 	val state: StateFlow<UiState> = _state.asStateFlow()
 
-	private val name: String = checkNotNull(savedStateHandle["name"])
-
 	init {
-		requestPokemonDetails()
+		requestPokemonDetails(name, imageUrl)
 	}
 
-	private fun requestPokemonDetails() {
+	private fun requestPokemonDetails(name: String, imageUrl: String) {
 		viewModelScope.launch {
-			Timber.d("zsoltbertalan* requestPokemonDetails name: $name")
-			_state.update { it.copy(loading = true) }
-			val pokemonDetails = pokedexGraphQLRepository.getPokemon(name)
-			Timber.d("zsoltbertalan* requestPokemonDetails: $pokemonDetails")
+			Timber.d("zsoltbertalan* PokemonDetailsViewModel: $imageUrl")
+			_state.update { it.copy(loading = true, title = name, imageUrl = imageUrl.replace("dash", "/")) }
+			val pokemonDetails = pokedexGraphQLRepository.getPokemon(this@PokemonDetailsViewModel.name)
 			_state.update { uiState ->
 				when {
 					pokemonDetails.isOk -> {
@@ -54,6 +54,8 @@ class PokemonDetailsViewModel @Inject constructor(
 
 	data class UiState(
 		val loading: Boolean = false,
+		val title: String = "",
+		val imageUrl: String = "",
 		val pokemon: PokemonDetails = PokemonDetails(),
 		val error: Failure? = null
 	)

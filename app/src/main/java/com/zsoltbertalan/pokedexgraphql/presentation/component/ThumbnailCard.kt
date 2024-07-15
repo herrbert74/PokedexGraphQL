@@ -44,9 +44,7 @@ fun ThumbnailCard(modifier: Modifier = Modifier, posterThumbnail: String) {
 		is AsyncImagePainter.State.Success -> {
 			Box(
 				modifier = modifier
-					//.padding(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 24.dp)
 					.width(180.dp)
-					//.background(Color.Red)
 					.height(240.dp),
 			) {
 				Image(

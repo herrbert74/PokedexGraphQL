@@ -72,7 +72,8 @@ dependencies {
 
 	implementation(libs.androidx.activity.compose)
 	implementation(libs.androidx.appcompat)
-	implementation(platform(libs.androidx.compose.bom))
+	implementation(platform(libs.androidx.compose.bom.alpha))
+	implementation(libs.androidx.compose.animation)
 	implementation(libs.androidx.compose.ui.ui)
 	implementation(libs.androidx.compose.ui.graphics)
 	implementation(libs.androidx.compose.ui.text)
@@ -159,4 +160,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
 	compilerOptions.freeCompilerArgs.add("-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+	compilerOptions.freeCompilerArgs.add("-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi")
 }

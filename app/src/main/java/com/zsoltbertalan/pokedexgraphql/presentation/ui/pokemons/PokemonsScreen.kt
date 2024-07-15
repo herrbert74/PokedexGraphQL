@@ -1,5 +1,6 @@
 package com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemons
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,17 +25,19 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.zsoltbertalan.pokedexgraphql.R
-import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTheme
-import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTypography
 import com.zsoltbertalan.pokedexgraphql.domain.model.Pokemon
 import com.zsoltbertalan.pokedexgraphql.presentation.component.PokemonCard
 import com.zsoltbertalan.pokedexgraphql.presentation.component.ShowLoading
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
+import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTheme
+import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTypography
+import timber.log.Timber
 
 @Composable
 fun PokemonsScreen(
 	pokemonList: LazyPagingItems<Pokemon>,
-	onItemClick: (String) -> Unit,
+	animatedContentScope: AnimatedContentScope,
+	onItemClick: (String, String) -> Unit,
 ) {
 
 	Scaffold(
@@ -58,7 +61,7 @@ fun PokemonsScreen(
 				.background(Colors.surface)
 				.padding(paddingValues)
 		) {
-			showPokemons(pokemonList, onItemClick)
+			showPokemons(pokemonList, onItemClick, animatedContentScope)
 		}
 	}
 }
@@ -87,17 +90,20 @@ private fun ErrorView(innerPadding: PaddingValues) {
 
 private fun LazyListScope.showPokemons(
 	pokemonLazyPagingItems: LazyPagingItems<Pokemon>,
-	onItemClick: (String) -> Unit,
+	onItemClick: (String, String) -> Unit,
+	animatedContentScope: AnimatedContentScope,
 ) {
 
 	items(pokemonLazyPagingItems.itemCount) { index ->
 		pokemonLazyPagingItems[index].let {
+			Timber.d("zsoltbertalan* showPokemons: ${it?.imageUrl}")
 			it?.let {
 				PokemonCard(
 					id = it.id.toString(),
 					name = it.name,
 					imageUrl = it.imageUrl,
-					onItemClick = onItemClick
+					onItemClick = onItemClick,
+					animatedContentScope = animatedContentScope
 				)
 			}
 

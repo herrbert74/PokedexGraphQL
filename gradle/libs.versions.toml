@@ -24,6 +24,7 @@ androidx-test-runner = "1.6.1"
 androidx-test-espresso = "3.6.1"
 androidx-compose-compiler = "1.5.12"
 androidx-compose-bom = "2024.06.00"
+androidx-compose-bom-alpha = "2024.07.00-alpha01"
 #androidx-compose-material3 = "1.1.1" #This had search bar
 #androidx-compose-animation = "1.4.0" #For fixes since the bom
 #androidx-compose-foundation = "1.4.0" #For fixes since the bom
@@ -153,6 +154,7 @@ androidx-workmanager-testing = { module = "androidx.work:work-testing", version.
 #androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
+androidx-compose-bom-alpha = { module = "dev.chrisbanes.compose:compose-bom", version.ref = "androidx-compose-bom-alpha" }
 
 androidx-compose-ui-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
@@ -168,6 +170,7 @@ androidx-compose-ui-unit = { group = "androidx.compose.ui", name = "ui-unit" }
 androidx-compose-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "androidx.compose.ui" }
 androidx-compose-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "androidx.compose.ui"} #createComposeRule
 
+androidx-compose-animation = { module = "androidx.compose.animation:animation" }
 androidx-compose-animation-core = { module = "androidx.compose.animation:animation-core" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-foundationLayout = { module = "androidx.compose.foundation:foundation-layout" }

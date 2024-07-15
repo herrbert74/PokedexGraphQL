@@ -24,17 +24,6 @@ class PokemonsViewModel @Inject constructor(private val pokemonRepository: Pokem
 
 	val pokemons : Flow<PagingData<Pokemon>> = pokemonRepository.getPokemonPageFlow().cachedIn(viewModelScope)
 
-//	init {
-//		requestPokemons()
-//	}
-
-//	fun requestPokemons() {
-//		viewModelScope.launch {
-//			_state.update { it.copy(loading = true) }
-//			pokemons =
-//		}
-//	}
-
 	data class UiState(
 		val loading: Boolean = false,
 		val pokemons: List<Pokemon> = emptyList(),

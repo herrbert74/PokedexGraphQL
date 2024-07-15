@@ -8,5 +8,5 @@ enum class Destination(
 	val route: String
 ) {
 	POKEMONS(R.string.pokemons, "pokemons"),
-	DETAILS(R.string.details, "details/{name}"),
+	DETAILS(R.string.details, "details/{name}/{imageUrl}"),
 }

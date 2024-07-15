@@ -1,6 +1,7 @@
 package com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemondetails
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -43,47 +44,66 @@ import com.zsoltbertalan.pokedexgraphql.R
 import com.zsoltbertalan.pokedexgraphql.presentation.component.DetailText
 import com.zsoltbertalan.pokedexgraphql.presentation.component.SubtitleText
 import com.zsoltbertalan.pokedexgraphql.presentation.component.TitleText
+import com.zsoltbertalan.pokedexgraphql.presentation.component.boundsTransform
 import com.zsoltbertalan.pokedexgraphql.presentation.component.shape.TiltedShape
 import com.zsoltbertalan.pokedexgraphql.presentation.component.subTitleModifier
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Dimens
 import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTheme
 import com.zsoltbertalan.pokedexgraphql.presentation.design.smallDimensions
+import com.zsoltbertalan.pokedexgraphql.presentation.navigation.LocalSharedTransitionScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
+import timber.log.Timber
 
 @Composable
 fun PokemonDetailsScreen(
 	stateFlow: StateFlow<PokemonDetailsViewModel.UiState>,
-	onBackClick: () -> Unit,
+	animatedContentScope: AnimatedContentScope,
+	onBackClick: () -> Unit
 ) {
+
+	val sharedTransitionScope = LocalSharedTransitionScope.current
+		?: throw IllegalStateException("No Scope found")
 
 	val uiState by stateFlow.collectAsStateWithLifecycle()
 
 	BackHandler(onBack = { onBackClick() })
 
 	val pokemon = uiState.pokemon
+	val title = uiState.title
+	val imageUrl = uiState.imageUrl
 
 	Scaffold(
 		topBar = {
-			TopAppBar(
-				colors = TopAppBarDefaults.topAppBarColors(
-					containerColor = PokedexGraphQLTheme.colorScheme.primaryContainer,
-					titleContentColor = PokedexGraphQLTheme.colorScheme.primary,
-				),
-				title = {
-					TitleText(name = uiState.pokemon.name)
-				},
-				navigationIcon = {
-					IconButton(onClick = { onBackClick() }) {
-						Icon(
-							imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-							contentDescription = "Finish",
-							tint = MaterialTheme.colorScheme.onPrimaryContainer
+			with(sharedTransitionScope) {
+				TopAppBar(
+					colors = TopAppBarDefaults.topAppBarColors(
+						containerColor = PokedexGraphQLTheme.colorScheme.primaryContainer,
+						titleContentColor = PokedexGraphQLTheme.colorScheme.primary,
+					),
+					title = {
+						TitleText(
+							name = title,
+							modifier = Modifier
+								.sharedElement(
+									sharedTransitionScope.rememberSharedContentState(key = "pokemon-${title}"),
+									animatedVisibilityScope = animatedContentScope,
+									boundsTransform = boundsTransform
+								)
 						)
+					},
+					navigationIcon = {
+						IconButton(onClick = { onBackClick() }) {
+							Icon(
+								imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+								contentDescription = "Finish",
+								tint = MaterialTheme.colorScheme.onPrimaryContainer
+							)
+						}
 					}
-				}
-			)
+				)
+			}
 		}
 	) { innerPadding ->
 
@@ -94,6 +114,7 @@ fun PokemonDetailsScreen(
 				.testTag("PokemonDetail")
 		) {
 
+//			with(sharedTransitionScope) {
 			Row(
 				verticalAlignment = Alignment.CenterVertically,
 				modifier = Modifier
@@ -127,11 +148,13 @@ fun PokemonDetailsScreen(
 					}
 				}
 
+				Timber.d("zsoltbertalan* PokemonDetailsScreen: $imageUrl")
+
 				val imageRequest = ImageRequest.Builder(LocalContext.current)
-					.data(pokemon.imageUrl)
+					.data(imageUrl)
 					.dispatcher(Dispatchers.IO)
-					.memoryCacheKey(pokemon.imageUrl)
-					.diskCacheKey(pokemon.imageUrl)
+					.memoryCacheKey(imageUrl)
+					.diskCacheKey(imageUrl)
 					.diskCachePolicy(CachePolicy.ENABLED)
 					.memoryCachePolicy(CachePolicy.ENABLED)
 					.build()
@@ -139,6 +162,10 @@ fun PokemonDetailsScreen(
 					model = imageRequest,
 					contentDescription = null,
 					modifier = Modifier
+//							.sharedElement(
+//								sharedTransitionScope.rememberSharedContentState(key = "image-${imageUrl}"),
+//								animatedVisibilityScope = animatedContentScope
+//							)
 						.weight(1f)
 						.padding(Dimens.marginSmall)
 						.clip(RoundedCornerShape(Dimens.marginLarge))
@@ -148,6 +175,7 @@ fun PokemonDetailsScreen(
 					contentScale = ContentScale.FillWidth,
 				)
 			}
+//			}
 			SubtitleText(name = "Abilities", subTitleModifier)
 			FlowRow(modifier = Modifier.padding(smallDimensions.marginNormal)) {
 				pokemon.abilities.forEach {
