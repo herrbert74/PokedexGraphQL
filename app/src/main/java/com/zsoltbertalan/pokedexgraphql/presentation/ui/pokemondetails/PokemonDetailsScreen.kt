@@ -20,8 +20,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -43,7 +45,6 @@ import coil.request.ImageRequest
 import com.zsoltbertalan.pokedexgraphql.R
 import com.zsoltbertalan.pokedexgraphql.presentation.component.DetailText
 import com.zsoltbertalan.pokedexgraphql.presentation.component.SubtitleText
-import com.zsoltbertalan.pokedexgraphql.presentation.component.TitleText
 import com.zsoltbertalan.pokedexgraphql.presentation.component.boundsTransform
 import com.zsoltbertalan.pokedexgraphql.presentation.component.shape.TiltedShape
 import com.zsoltbertalan.pokedexgraphql.presentation.component.subTitleModifier
@@ -55,6 +56,8 @@ import com.zsoltbertalan.pokedexgraphql.presentation.navigation.LocalSharedTrans
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
+
+const val STATS_MAXIMUM = 250f
 
 @Composable
 fun PokemonDetailsScreen(
@@ -83,8 +86,8 @@ fun PokemonDetailsScreen(
 						titleContentColor = PokedexGraphQLTheme.colorScheme.primary,
 					),
 					title = {
-						TitleText(
-							name = title,
+						Text(
+							text = title,
 							modifier = Modifier
 								.sharedElement(
 									sharedTransitionScope.rememberSharedContentState(key = "pokemon-${title}"),
@@ -223,27 +226,20 @@ fun PokemonDetailsScreen(
 				}
 			}
 			SubtitleText(name = "Stats", subTitleModifier)
-			FlowRow(modifier = Modifier.padding(smallDimensions.marginNormal)) {
+			Column(modifier = Modifier.padding(smallDimensions.marginNormal)) {
+
 				pokemon.stats.forEach {
-					Box(
+					DetailText(text = it.name)
+					LinearProgressIndicator(
 						modifier = Modifier
-							.padding(smallDimensions.marginNormal)
-							.clip(TiltedShape())
-							.background(color = Colors.tertiaryContainer),
-						contentAlignment = Alignment.Center
-					) {
-						Box(
-							modifier = Modifier
-								.padding(smallDimensions.marginSmall)
-								.clip(TiltedShape())
-								.background(color = Colors.surfaceContainerLow)
-								.padding(smallDimensions.marginSmall),
-							contentAlignment = Alignment.Center
-						) {
-							DetailText(text = it.name)
-						}
-					}
+							.padding(vertical = smallDimensions.marginLarge, horizontal = smallDimensions.marginNormal)
+							.fillMaxWidth(),
+						progress = { it.baseStat / STATS_MAXIMUM },
+						color = Colors.onPrimaryContainer,
+						trackColor = Colors.secondaryContainer
+					)
 				}
+
 			}
 		}
 	}
