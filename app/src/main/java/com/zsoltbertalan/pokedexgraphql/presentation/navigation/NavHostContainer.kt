@@ -71,7 +71,7 @@ fun NavHostContainer(
 							stateFlow = detailsViewModel.state,
 							this@composable
 						) {
-							navController.popBackStack()
+							navController.navigateUp()
 						}
 					}
 				}
