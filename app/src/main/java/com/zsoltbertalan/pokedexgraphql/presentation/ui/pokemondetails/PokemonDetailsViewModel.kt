@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonDetailsViewModel @Inject constructor(
 	savedStateHandle: SavedStateHandle,
-	private val pokedexGraphQLRepository: PokemonRepository
+	private val pokedexGraphQLRepository: dagger.Lazy<PokemonRepository>
 ) : ViewModel() {
 
 	private val name: String = checkNotNull(savedStateHandle["name"])
@@ -35,7 +35,7 @@ class PokemonDetailsViewModel @Inject constructor(
 		viewModelScope.launch {
 			Timber.d("zsoltbertalan* PokemonDetailsViewModel: $imageUrl")
 			_state.update { it.copy(loading = true, title = name, imageUrl = imageUrl.replace("dash", "/")) }
-			val pokemonDetails = pokedexGraphQLRepository.getPokemon(this@PokemonDetailsViewModel.name)
+			val pokemonDetails = pokedexGraphQLRepository.get().getPokemon(this@PokemonDetailsViewModel.name)
 			_state.update { uiState ->
 				when {
 					pokemonDetails.isOk -> {

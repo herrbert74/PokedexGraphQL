@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PokemonsViewModel @Inject constructor(private val pokemonRepository: PokemonRepository) : ViewModel() {
+class PokemonsViewModel @Inject constructor(pokemonRepository: PokemonRepository) : ViewModel() {
 
 	private val _state = MutableStateFlow(UiState())
 	val state: StateFlow<UiState> = _state.asStateFlow()
