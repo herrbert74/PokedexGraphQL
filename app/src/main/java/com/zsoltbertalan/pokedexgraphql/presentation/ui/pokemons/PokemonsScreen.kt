@@ -1,6 +1,5 @@
 package com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemons
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +25,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.zsoltbertalan.pokedexgraphql.R
 import com.zsoltbertalan.pokedexgraphql.domain.model.Pokemon
-import com.zsoltbertalan.pokedexgraphql.presentation.component.PokemonCard
 import com.zsoltbertalan.pokedexgraphql.presentation.component.ShowLoading
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
 import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTheme
@@ -36,7 +34,6 @@ import timber.log.Timber
 @Composable
 fun PokemonsScreen(
 	pokemonList: LazyPagingItems<Pokemon>,
-	animatedContentScope: AnimatedContentScope,
 	onItemClick: (String, String) -> Unit,
 ) {
 
@@ -61,7 +58,7 @@ fun PokemonsScreen(
 				.background(Colors.surface)
 				.padding(paddingValues)
 		) {
-			showPokemons(pokemonList, onItemClick, animatedContentScope)
+			showPokemons(pokemonList, onItemClick)
 		}
 	}
 }
@@ -91,7 +88,6 @@ private fun ErrorView(innerPadding: PaddingValues) {
 private fun LazyListScope.showPokemons(
 	pokemonLazyPagingItems: LazyPagingItems<Pokemon>,
 	onItemClick: (String, String) -> Unit,
-	animatedContentScope: AnimatedContentScope,
 ) {
 
 	items(pokemonLazyPagingItems.itemCount) { index ->
@@ -103,7 +99,6 @@ private fun LazyListScope.showPokemons(
 					name = it.name,
 					imageUrl = it.imageUrl,
 					onItemClick = onItemClick,
-					animatedContentScope = animatedContentScope
 				)
 			}
 

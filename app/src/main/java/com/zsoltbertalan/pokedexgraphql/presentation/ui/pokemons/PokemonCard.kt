@@ -1,7 +1,8 @@
-package com.zsoltbertalan.pokedexgraphql.presentation.component
+package com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemons
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,12 +18,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.zsoltbertalan.pokedexgraphql.presentation.component.LargeText
+import com.zsoltbertalan.pokedexgraphql.presentation.component.ThumbnailCard
+import com.zsoltbertalan.pokedexgraphql.presentation.component.TitleText
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
+import com.zsoltbertalan.pokedexgraphql.presentation.design.PokedexGraphQLTheme
 import com.zsoltbertalan.pokedexgraphql.presentation.design.smallDimensions
+import com.zsoltbertalan.pokedexgraphql.presentation.navigation.LocalPokemonsAnimatedVisibilityScope
 import com.zsoltbertalan.pokedexgraphql.presentation.navigation.LocalSharedTransitionScope
 
-private const val TRANSFORM_DURATION = 750
+private const val TRANSFORM_DURATION = 500
 
 val boundsTransform = { _: Rect, _: Rect -> tween<Rect>(TRANSFORM_DURATION) }
 
@@ -33,15 +40,14 @@ fun PokemonCard(
 	name: String,
 	imageUrl: String,
 	onItemClick: (String, String) -> Unit,
-	animatedContentScope: AnimatedContentScope,
 ) {
-
-
 
 	val sharedTransitionScope = LocalSharedTransitionScope.current
 		?: throw IllegalStateException("No Scope found")
 
-	//with(sharedTransitionScope) {
+	val sharedAnimatedVisibilityScope = LocalPokemonsAnimatedVisibilityScope.current
+		?: throw IllegalStateException("No Scope found")
+
 	Box(
 		modifier = modifier
 			.padding(horizontal = smallDimensions.marginLarge)
@@ -67,49 +73,53 @@ fun PokemonCard(
 				) {
 					LargeText(rating = id)
 					TitleText(
-						name = name,
 						modifier = Modifier
-							.sharedElement(
+							.skipToLookaheadSize()
+							.sharedBounds(
 								sharedTransitionScope.rememberSharedContentState(key = "pokemon-$name"),
-								animatedVisibilityScope = animatedContentScope,
+								exit = fadeOut(),
+								enter = fadeIn(),
+								renderInOverlayDuringTransition = false,
+								animatedVisibilityScope = sharedAnimatedVisibilityScope,
 								boundsTransform = boundsTransform
-							)
+							),
+						name = name
 					)
 				}
 			}
 		}
 
-//		with(sharedTransitionScope) {
-		ThumbnailCard(
-			modifier = Modifier
-//					.sharedElement(
-//						sharedTransitionScope.rememberSharedContentState(key = "image-$imageUrl"),
-//						animatedVisibilityScope = animatedContentScope,
-//						boundsTransform = boundsTransform
-//					)
-				.align(Alignment.CenterEnd)
-				.padding(bottom = smallDimensions.marginExtraLarge),
-			posterThumbnail = imageUrl
-		)
-//		}
+		with(sharedTransitionScope) {
+			ThumbnailCard(
+				modifier = Modifier
+					.skipToLookaheadSize()
+					.sharedBounds(
+						sharedTransitionScope.rememberSharedContentState(key = "image-$imageUrl"),
+						animatedVisibilityScope = sharedAnimatedVisibilityScope,
+						renderInOverlayDuringTransition = false,
+						exit = fadeOut(),
+						enter = fadeIn(),
+						boundsTransform = boundsTransform
+					)
+					.align(Alignment.CenterEnd),
+				posterThumbnail = imageUrl
+			)
+		}
 
 	}
-//	}
 
 }
 
-//@Preview
-//@Composable
-//fun ShowDetailCardPreview() {
-//	PokedexGraphQLTheme {
-//		PokemonCard(
-//			id = "0001",
-//			name = "ivysaur",
-//			imageUrl = "https://raw.githubusercontent" +
-//				".com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
-//			onItemClick = {},
-//			sharedTransitionScope = SharedTransitionScope(),
-//			animatedContentScope= AnimatedContentScope(),
-//		)
-//	}
-//}
+@Preview
+@Composable
+fun ShowDetailCardPreview() {
+	PokedexGraphQLTheme {
+		PokemonCard(
+			id = "0001",
+			name = "ivysaur",
+			imageUrl = "https://raw.githubusercontent" +
+				".com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
+			onItemClick = { _: String, _: String -> },
+		)
+	}
+}

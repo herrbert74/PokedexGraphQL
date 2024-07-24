@@ -2,6 +2,8 @@ package com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemondetails
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -45,7 +47,7 @@ import coil.request.ImageRequest
 import com.zsoltbertalan.pokedexgraphql.R
 import com.zsoltbertalan.pokedexgraphql.presentation.component.DetailText
 import com.zsoltbertalan.pokedexgraphql.presentation.component.SubtitleText
-import com.zsoltbertalan.pokedexgraphql.presentation.component.boundsTransform
+import com.zsoltbertalan.pokedexgraphql.presentation.ui.pokemons.boundsTransform
 import com.zsoltbertalan.pokedexgraphql.presentation.component.shape.TiltedShape
 import com.zsoltbertalan.pokedexgraphql.presentation.component.subTitleModifier
 import com.zsoltbertalan.pokedexgraphql.presentation.design.Colors
@@ -83,17 +85,20 @@ fun PokemonDetailsScreen(
 				TopAppBar(
 					colors = TopAppBarDefaults.topAppBarColors(
 						containerColor = PokedexGraphQLTheme.colorScheme.primaryContainer,
-						titleContentColor = PokedexGraphQLTheme.colorScheme.primary,
+						titleContentColor = PokedexGraphQLTheme.colorScheme.onPrimaryContainer,
 					),
 					title = {
 						Text(
 							text = title,
 							modifier = Modifier
-								.sharedElement(
+								.sharedBounds(
 									sharedTransitionScope.rememberSharedContentState(key = "pokemon-${title}"),
 									animatedVisibilityScope = animatedContentScope,
-									boundsTransform = boundsTransform
+									boundsTransform = boundsTransform,
+									exit = fadeOut(),
+									enter = fadeIn(),
 								)
+								.skipToLookaheadSize()
 						)
 					},
 					navigationIcon = {
@@ -114,71 +119,75 @@ fun PokemonDetailsScreen(
 			modifier = Modifier
 				.padding(innerPadding)
 				.verticalScroll(ScrollState(0))
-				.testTag("PokemonDetail")
+				.testTag("PokemonDetails")
 		) {
 
-//			with(sharedTransitionScope) {
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-				modifier = Modifier
-					.background(Colors.primaryContainer)
-					.wrapContentHeight()
-					.fillMaxWidth()
-			) {
-
-				Column(
+			with(sharedTransitionScope) {
+				Row(
+					verticalAlignment = Alignment.CenterVertically,
 					modifier = Modifier
-						.weight(2f)
 						.background(Colors.primaryContainer)
-						.padding(vertical = Dimens.marginNormal, horizontal = Dimens.marginLarge)
+						.wrapContentHeight()
+						.fillMaxWidth()
 				) {
 
-					SubtitleText(name = "Types", Modifier.padding(horizontal = 0.dp))
-					FlowRow(modifier = Modifier.padding(vertical = smallDimensions.marginNormal)) {
-						pokemon.types.forEach {
-							Box(
-								modifier = Modifier
-									.padding(vertical = smallDimensions.marginNormal)
-									.height(smallDimensions.marginTripleLarge)
-									.defaultMinSize(minWidth = smallDimensions.buttonWidth)
-									.clip(RoundedCornerShape(smallDimensions.marginDoubleLarge))
-									.background(color = Colors.secondaryContainer),
-								contentAlignment = Alignment.Center
-							) {
-								DetailText(text = it)
+					Column(
+						modifier = Modifier
+							.weight(2f)
+							.background(Colors.primaryContainer)
+							.padding(vertical = Dimens.marginNormal, horizontal = Dimens.marginLarge)
+					) {
+
+						SubtitleText(name = "Types", Modifier.padding(horizontal = 0.dp))
+						FlowRow(modifier = Modifier.padding(vertical = smallDimensions.marginNormal)) {
+							pokemon.types.forEach {
+								Box(
+									modifier = Modifier
+										.padding(vertical = smallDimensions.marginNormal)
+										.height(smallDimensions.marginTripleLarge)
+										.defaultMinSize(minWidth = smallDimensions.buttonWidth)
+										.clip(RoundedCornerShape(smallDimensions.marginDoubleLarge))
+										.background(color = Colors.secondaryContainer),
+									contentAlignment = Alignment.Center
+								) {
+									DetailText(text = it)
+								}
 							}
 						}
 					}
+
+					Timber.d("zsoltbertalan* PokemonDetailsScreen: $imageUrl")
+
+					val imageRequest = ImageRequest.Builder(LocalContext.current)
+						.data(imageUrl)
+						.dispatcher(Dispatchers.IO)
+						.memoryCacheKey(imageUrl)
+						.diskCacheKey(imageUrl)
+						.diskCachePolicy(CachePolicy.ENABLED)
+						.memoryCachePolicy(CachePolicy.ENABLED)
+						.build()
+					AsyncImage(
+						model = imageRequest,
+						contentDescription = null,
+						modifier = Modifier
+							.sharedBounds(
+								sharedTransitionScope.rememberSharedContentState(key = "image-${imageUrl}"),
+								animatedVisibilityScope = animatedContentScope,
+								exit = fadeOut(),
+								enter = fadeIn(),
+								boundsTransform = boundsTransform,
+							)
+							.skipToLookaheadSize()
+							.weight(1f)
+							.padding(Dimens.marginSmall)
+							.clip(RoundedCornerShape(Dimens.marginLarge))
+							.testTag("PokemonImage"),
+						placeholder = painterResource(R.drawable.ic_transparent),
+						error = painterResource(id = R.drawable.ic_error),
+						contentScale = ContentScale.FillWidth,
+					)
 				}
-
-				Timber.d("zsoltbertalan* PokemonDetailsScreen: $imageUrl")
-
-				val imageRequest = ImageRequest.Builder(LocalContext.current)
-					.data(imageUrl)
-					.dispatcher(Dispatchers.IO)
-					.memoryCacheKey(imageUrl)
-					.diskCacheKey(imageUrl)
-					.diskCachePolicy(CachePolicy.ENABLED)
-					.memoryCachePolicy(CachePolicy.ENABLED)
-					.build()
-				AsyncImage(
-					model = imageRequest,
-					contentDescription = null,
-					modifier = Modifier
-//							.sharedElement(
-//								sharedTransitionScope.rememberSharedContentState(key = "image-${imageUrl}"),
-//								animatedVisibilityScope = animatedContentScope
-//							)
-						.weight(1f)
-						.padding(Dimens.marginSmall)
-						.clip(RoundedCornerShape(Dimens.marginLarge))
-						.testTag("PokemonImage"),
-					placeholder = painterResource(R.drawable.ic_transparent),
-					error = painterResource(id = R.drawable.ic_error),
-					contentScale = ContentScale.FillWidth,
-				)
 			}
-//			}
 			SubtitleText(name = "Abilities", subTitleModifier)
 			FlowRow(modifier = Modifier.padding(smallDimensions.marginNormal)) {
 				pokemon.abilities.forEach {
