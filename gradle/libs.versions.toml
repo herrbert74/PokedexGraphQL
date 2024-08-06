@@ -22,7 +22,6 @@ androidx-test-core = "1.6.1"
 androidx-test-rules = "1.6.1"
 androidx-test-runner = "1.6.1"
 androidx-test-espresso = "3.6.1"
-androidx-compose-compiler = "1.5.12"
 androidx-compose-bom = "2024.06.00"
 androidx-compose-bom-alpha = "2024.07.00-alpha01"
 #androidx-compose-material3 = "1.1.1" #This had search bar
