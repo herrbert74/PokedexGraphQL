@@ -5,7 +5,13 @@ import com.zsoltbertalan.pokedexgraphql.data.network.dto.PokemonDto
 object PokemonDtoMother {
 
 	fun createPokemonDtoList() = listOf(
-		createDefaultPokemonDto(id = 0, name = "name1", hitPoints = 140, type = "Normal"),
+		createDefaultPokemonDto(
+			id = 0,
+			name = "name1",
+			hitPoints = 140,
+			evolutions = listOf("Bulbasaur"),
+			type = "Normal"
+		),
 		createDefaultPokemonDto(id = 1, name = "name2", hitPoints = 30, type = "Grass"),
 		createDefaultPokemonDto(id = 2, name = "name3", hitPoints = 45, type = "Water"),
 		createDefaultPokemonDto(id = 3, name = "name4", hitPoints = 120, type = "Fire", location = ""),

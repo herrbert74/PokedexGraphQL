@@ -18,17 +18,17 @@ class PokemonDtoTest {
 
 	@Test
 	fun `when there is a response then name is mapped`() {
-		mappedResponse[0].name shouldBe "Walter White"
+		mappedResponse[0].name shouldBe "name1"
 	}
 
 	@Test
 	fun `when there is a response then occupation is mapped`() {
-		mappedResponse[0].occupation shouldBe "High School Chemistry Teacher, Meth King Pin"
+		mappedResponse[0].evolutions shouldBe listOf("Bulbasaur")
 	}
 
 	@Test
 	fun `when there is a response then status is mapped`() {
-		mappedResponse[0].status shouldBe Status.Unknown
+		mappedResponse[0].abilities shouldBe emptyList()
 	}
 
 }

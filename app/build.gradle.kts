@@ -22,7 +22,7 @@ android {
 		minSdk = libs.versions.minSdkVersion.get().toInt()
 		compileSdk = libs.versions.compileSdkVersion.get().toInt()
 		targetSdk = libs.versions.targetSdkVersion.get().toInt()
-		testInstrumentationRunner = "com.zsoltbertalan.pokedexgraphql.PokedexAndroidJUnitRunner"
+		testInstrumentationRunner = "com.zsoltbertalan.pokedexgraphql.PokedexGraphQLAndroidJUnitRunner"
 	}
 
 	buildTypes {
@@ -46,8 +46,11 @@ android {
 		compose = true
 	}
 
-	//Needed for Mockk
-	testOptions { packaging { jniLibs { useLegacyPackaging = true } } }
+	testOptions {
+		//Needed for Mockk
+		packaging { jniLibs { useLegacyPackaging = true } }
+		unitTests.isReturnDefaultValues = true
+	}
 
 	packaging {
 		resources.excludes.add("MANIFEST.MF")
@@ -122,6 +125,7 @@ dependencies {
 	implementation(libs.androidx.paging.compose)
 	implementation(libs.androidx.paging.runtime)
 
+	testImplementation(libs.androidx.paging.testing)
 	testImplementation(libs.androidx.test.coreKtx)
 	testImplementation(libs.androidx.test.ext.jUnit)
 	testImplementation(libs.test.mockk.core)

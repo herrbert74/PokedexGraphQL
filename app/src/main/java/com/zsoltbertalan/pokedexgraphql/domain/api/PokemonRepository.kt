@@ -8,10 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepository {
 
-	fun getAllPokemon(): Flow<Outcome<List<Pokemon>>>
-
-	fun getPokemon(pokemonId: Int): Flow<Outcome<Pokemon>>
-
 	fun getPokemonPageFlow(): Flow<PagingData<Pokemon>>
 
 	suspend fun getPokemon(name:String): Outcome<PokemonDetails>

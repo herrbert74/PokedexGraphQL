@@ -2,14 +2,15 @@ package com.zsoltbertalan.pokedexgraphql
 
 import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.zsoltbertalan.pokedexgraphql.domain.api.PokemonRepository
 import com.zsoltbertalan.pokedexgraphql.common.async.IoDispatcher
 import com.zsoltbertalan.pokedexgraphql.common.async.MainDispatcher
+import com.zsoltbertalan.pokedexgraphql.domain.api.PokemonRepository
+import com.zsoltbertalan.pokedexgraphql.presentation.ui.PokedexGraphQLActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
@@ -26,8 +27,8 @@ class PokemonDetailsTest {
 	@get:Rule(order = 0)
 	val hiltAndroidRule = HiltAndroidRule(this)
 
-	@get:Rule
-	val composeTestRule = createComposeRule()
+	@get:Rule(order = 1)
+	val composeTestRule = createAndroidComposeRule<PokedexGraphQLActivity>()
 
 	@Inject
 	lateinit var pokemonRepository: PokemonRepository

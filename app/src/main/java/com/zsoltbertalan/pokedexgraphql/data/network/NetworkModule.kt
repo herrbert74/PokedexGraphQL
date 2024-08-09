@@ -10,10 +10,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 private const val BASE_URL: String = "https://graphql-pokeapi.graphcdn.app"
@@ -22,28 +18,6 @@ private const val BASE_URL: String = "https://graphql-pokeapi.graphcdn.app"
 @Suppress("unused")
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-
-	@Provides
-	@Singleton
-	internal fun providePokemonRetrofit(): Retrofit {
-		val logging = HttpLoggingInterceptor()
-		logging.level = HttpLoggingInterceptor.Level.BODY
-
-		val httpClient = OkHttpClient.Builder()
-
-		httpClient.addInterceptor(logging)
-		return Retrofit.Builder()
-			.baseUrl(BASE_URL)
-			.addConverterFactory(GsonConverterFactory.create())
-			.client(httpClient.build())
-			.build()
-	}
-
-	@Provides
-	@Singleton
-	internal fun providePokemonService(retroFit: Retrofit): PokemonService {
-		return retroFit.create(PokemonService::class.java)
-	}
 
 	@Provides
 	@Singleton
@@ -56,12 +30,11 @@ class NetworkModule {
 	@Provides
 	@Singleton
 	fun providePokemonRepository(
-		pokemonService: PokemonService,
 		apolloClient: ApolloClient,
 		@IoDispatcher ioContext: CoroutineDispatcher,
 		pokemonDataSource: PokemonDataSource,
 	): PokemonRepository {
-		return PokemonAccessor(pokemonService, apolloClient, pokemonDataSource, ioContext)
+		return PokemonAccessor(apolloClient, pokemonDataSource, ioContext)
 	}
 
 }
